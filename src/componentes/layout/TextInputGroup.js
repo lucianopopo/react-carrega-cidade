@@ -8,6 +8,7 @@ const TextInputGroup = ({
   value,
   placeholder,
   type,
+  maxlength,
   onChange,
   error
 }) => {
@@ -21,6 +22,7 @@ const TextInputGroup = ({
           'is-invalid': error
         })}
         placeholder={placeholder}
+        maxlength={maxlength}
         value={value}
         onChange={onChange}
       />
@@ -34,6 +36,7 @@ TextInputGroup.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  maxlength: PropTypes.string.isRequired,
   error: PropTypes.string
 };
 
