@@ -11,58 +11,28 @@ class Home extends Component {
     errors: {}
   };
 
-  // função onSubmit que é chamada ao enviar o formulário
-  /*onSubmit = async e => {
-    e.preventDefault();
-    const { id } = this.state;
-
-    // checa por campo vazio
-    if (id === '') {
-      this.setState({
-        errors: { id: 'O campo "Código da Cidade" é obrigatório.' }
-      });
-      return;
-    }
-
-    // chama a API passando id da cidade para o método GET
-    const res = await axios.get(
-      `https://servicodados.ibge.gov.br/api/v1/localidades/municipios/${id}`
-    );
-
-    if (res.data.nome !== undefined) {
-      this.setState({ nome: res.data.nome, errors: {} });
-    } else {
-      // se não encontrar a cidade, seta amensagem de erro
-      this.setState({
-        id: '',
-        nome: '',
-        errors: { nome: 'Cidade não encontrada.' }
-      });
+  // função que atualiza o campo ao digitar
+  validaNumero = e => {
+    const regex = /^[0-9\b]+$/;
+    const valor = e.target.value;
+    if (valor === '' || regex.test(valor)) {
+      this.setState({ [e.target.name]: valor });
     }
   };
-  
-  // função que atualiza o campo ao digitar
-  onChange = e => this.setState({ [e.target.name]: e.target.value });*/
 
-  onChange = async e => {
-    this.setState({ [e.target.name]: e.target.value });
+  // função chamada ao digitar o campo código do município
+  onKeyUp = async e => {
     e.preventDefault();
     const { id } = this.state;
 
-    // checa por campo vazio
-    if (id.length === 0) {
-      this.setState({
-        errors: { id: 'O campo "Código da Cidade" é obrigatório.' }
-      });
-      return;
-    } else if (id.length === 7) {
+    if (id.length === 7) {
       // chama a API passando id da cidade para o método GET
       const res = await axios.get(
         `https://servicodados.ibge.gov.br/api/v1/localidades/municipios/${id}`
       );
 
       if (res.data.nome !== undefined) {
-        this.setState({ nome: res.data.nome, errors: {} });
+        this.setState({ nome: res.data.nome.toUpperCase(), errors: {} });
       } else {
         // se não encontrar a cidade, seta amensagem de erro
         this.setState({
@@ -70,6 +40,12 @@ class Home extends Component {
           errors: { nome: 'Cidade não encontrada.' }
         });
       }
+    } else if (id.length < 7) {
+      // limpa o state do campo nome
+      this.setState({
+        nome: '',
+        errors: ''
+      });
     }
   };
 
@@ -93,9 +69,11 @@ class Home extends Component {
                   <TextInputGroup
                     label="Código da Cidade"
                     name="id"
-                    maxlength="7"
+                    maxLength="7"
                     value={id}
-                    onChange={this.onChange.bind(this)}
+                    pattern="[0-9]*"
+                    onChange={this.validaNumero}
+                    onKeyUp={this.onKeyUp.bind(this)}
                     error={errors.id}
                   />
                 </div>
@@ -103,6 +81,7 @@ class Home extends Component {
                   <TextInputGroup
                     label="Município"
                     name="nome"
+                    maxLength="60"
                     value={nome}
                     onChange={this.noChange}
                     error={errors.nome}

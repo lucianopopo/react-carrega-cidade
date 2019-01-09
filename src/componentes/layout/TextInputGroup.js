@@ -8,8 +8,9 @@ const TextInputGroup = ({
   value,
   placeholder,
   type,
-  maxlength,
+  maxLength,
   onChange,
+  onKeyUp,
   error
 }) => {
   return (
@@ -22,9 +23,10 @@ const TextInputGroup = ({
           'is-invalid': error
         })}
         placeholder={placeholder}
-        maxlength={maxlength}
+        maxLength={maxLength}
         value={value}
         onChange={onChange}
+        onKeyUp={onKeyUp}
       />
       {error && <div className="invalid-feedback">{error}</div>}
     </div>
@@ -36,7 +38,7 @@ TextInputGroup.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  maxlength: PropTypes.string.isRequired,
+  maxLength: PropTypes.string.isRequired,
   error: PropTypes.string
 };
 
